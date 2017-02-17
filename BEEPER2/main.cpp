@@ -103,14 +103,14 @@ LRESULT CALLBACK WindowProcedure (HWND hwnd, UINT message, WPARAM wParam, LPARAM
     case WM_CREATE:
         SetTimer(hwnd,ID_TIMER,1000,TimerProc);
         return 0;
-    case WM_PAINT:
-        hdc=BeginPaint(hwnd,&ps);
-        hBrush=CreateSolidBrush(fFlipFlop?RGB(255,0,0):RGB(0,0,255));
-        GetClientRect(hwnd,&rect);
-        FillRect(hdc,&rect,hBrush);
-
-        EndPaint(hwnd,&ps);
-        return 0;
+  //  case WM_PAINT:
+  //      hdc=BeginPaint(hwnd,&ps);
+  //      hBrush=CreateSolidBrush(fFlipFlop?RGB(255,0,0):RGB(0,0,255));
+   //     GetClientRect(hwnd,&rect);
+   //     FillRect(hdc,&rect,hBrush);
+//
+   //     EndPaint(hwnd,&ps);
+   //     return 0;
         case WM_DESTROY:
             PostQuitMessage (0);       /* send a WM_QUIT to the message queue */
             KillTimer(hwnd,ID_TIMER);
@@ -125,10 +125,19 @@ LRESULT CALLBACK WindowProcedure (HWND hwnd, UINT message, WPARAM wParam, LPARAM
 VOID   CALLBACK TimerProc(HWND hwnd,UINT message,UINT iTimerID,DWORD dwTime)
 {
 
-    if(message==WM_TIMER)
-    {
-        MessageBeep(-1);fFlipFlop=!fFlipFlop;
-        InvalidateRect(hwnd,NULL,FALSE);
+    HDC hdc;
+    PAINTSTRUCT ps;
+    RECT rect;
+    HBRUSH hBrush;
 
-    }
+        hdc=GetDC(hwnd);
+        MessageBeep(-1);fFlipFlop=!fFlipFlop;
+        //InvalidateRect(hwnd,NULL,FALSE);
+        hBrush=CreateSolidBrush(fFlipFlop?RGB(255,0,0):RGB(0,0,255));
+        GetClientRect(hwnd,&rect);
+        FillRect(hdc,&rect,hBrush);
+        ReleaseDC(hwnd,hdc);
+
+
+
 }
