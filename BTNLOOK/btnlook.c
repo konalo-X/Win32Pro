@@ -65,13 +65,15 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 	HWND childhwnd[NUM];
 	HDC hdc;
 	int i, cxClient, cyClient;
-	static RECT rect;
+	static RECT rect,leftRC;
 	static int cxChar, cyChar;
 	PAINTSTRUCT ps;
 	static TCHAR szTop[] = TEXT("message            wparam             lparam");
 	static TCHAR	szUnd[] = TEXT("_______            ______             ______");
+	TCHAR szbutton[] = TEXT("自定义button");
 	 TCHAR szBuffer[50];
 	TCHAR szFormat[] = TEXT("%-21s %04x-%04x     %04x-%04x");
+	LPDRAWITEMSTRUCT pdis;
 	switch (message)
 	{
 	case WM_CREATE:
@@ -93,8 +95,42 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		rect.left = 26 * cxChar;
 		rect.right = cxClient;
 		rect.bottom = cyClient;
+
+		leftRC.top = 2 * cyChar;
+		leftRC.left = 0;
+		leftRC.right = 25 * cxChar;
+		leftRC.bottom = cyClient;
+
 		return 0;
 	case WM_DRAWITEM:
+
+		pdis = (LPDRAWITEMSTRUCT)lParam;
+		TextOut(pdis->hDC, cxChar, 0, szbutton, lstrlen(szbutton));
+		if (pdis->itemState & ODS_FOCUS)
+		{
+			RECT rcbutton;
+			GetWindowRect(pdis->hwndItem, &rcbutton);
+			POINT pt[2];
+			pt[0].x = rcbutton.left;
+			pt[0].y = rcbutton.top;
+			pt[1].x = rcbutton.right;
+			pt[1].y = rcbutton.bottom;
+
+			ScreenToClient(pdis->hwndItem,&pt[0]);
+			ScreenToClient(pdis->hwndItem, &pt[1]);
+			rcbutton.left=pt[0].x ;
+			rcbutton.top=pt[0].y  ;
+			rcbutton.right =pt[1].x ;
+			rcbutton.bottom = pt[1].y;
+			rcbutton.left += rcbutton.left / 16;
+			rcbutton.top += rcbutton.top / 16;
+			rcbutton.right -= rcbutton.right / 16;
+			rcbutton.bottom -= rcbutton.bottom / 16;
+
+			DrawFocusRect(pdis->hDC, &rcbutton);
+		}
+
+		return 0;
 	case WM_COMMAND:
 	ScrollWindow(hwnd, 0, -cyChar, &rect, &rect);//scrollwindow 会产生wm_paint消息
 		hdc = GetDC(hwnd);
@@ -104,10 +140,13 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			HIWORD(wParam),LOWORD(wParam),
 			HIWORD(lParam),LOWORD(lParam)));
 		ReleaseDC(hwnd, hdc);
+		InvalidateRect(hwnd, &leftRC, TRUE);
 		ValidateRect(hwnd, &rect);
+		
+
 		return 0;
 	case WM_PAINT:
-		InvalidateRect(hwnd, &rect, TRUE);
+		InvalidateRect(hwnd, &leftRC, TRUE);
 		hdc = BeginPaint(hwnd, &ps);
 		SelectObject(hdc, GetStockObject(SYSTEM_FIXED_FONT));
 		SetBkMode(hdc,TRANSPARENT);
