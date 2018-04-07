@@ -1,0 +1,56 @@
+#include<windows.h>
+#include"resource.h"
+
+//////////////////////////////////////////////////
+//icon
+
+PopPad ICON DISCARDABLE "wpp.ico"
+
+///////////////////////////////////////////////////
+//menu
+
+PopPad  MENU  DISCARDABLE
+BEGIN
+    POPUP "檔案(&F)"
+    BEGIN
+    MENUITEM "&New\tCtrl +N",           IDM_FILE_NEW
+    MENUITEM "&Open\tCtrl +O",          IDM_FILE_OPEN
+    MENUITEM "&Save\tCtrl +S",           IDM_FILE_SAVE
+    MENUITEM "&Save As...",              IDM_FILE_SAVEAS
+    MENUITEM SEPARATOR
+    MENUITEM "&Print",                  IDM_FILE_PRINT
+    MENUITEM SEPARATOR
+    MENUITEM "Exit",                    IDM_APP_EXIT
+    END
+    POPUP "編輯(&E)"
+    BEGIN
+    MENUITEM "&Undo\tCtrl +Z",          IDM_EDIT_UNDO
+    MENUITEM SEPARATOR
+    MENUITEM "Cu&t\tCtrl +X",           IDM_EDIT_CUT
+    MENUITEM "&Copy\tCtrl +C",          IDM_EDIT_COPY
+    MENUITEM "&Paste\tCtrl +V",         IDM_EDIT_PASTE
+    MENUITEM "De&lete\tDel",            IDM_EDIT_CLEAR
+    MENUITEM SEPARATOR
+    MENUITEM "&Select All",              IDM_EDIT_SELEXT_ALL
+    END
+
+    POPUP   "查找(&S)"
+    BEGIN
+    MENUITEM    "&Find...\tCtrl +F",    IDM_SEARCH_FIND
+    MENUITEM    "Find &Next\tF3",       IDM_SEARCH_NEXT
+    MENUITEM    "&Replace...\tCtrl +R",  IDM_SEARCH_REPLACE
+    END
+
+    POPUP   "格式(&O)"
+    BEGIN
+    MENUITEM    "Font...",              IDM_FORMAT_FONT
+    END
+
+    POPUP   "說明(&H)"
+    BEGIN
+    MENUITEM    "&Help",                IDM_HELP
+    MENUITEM    "&About PopPad...",     IDM_APP_ABOUT
+    END
+END
+
+

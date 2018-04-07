@@ -1,0 +1,286 @@
+BL51 BANKED LINKER/LOCATER V6.22                                                        10/08/2011  10:31:25  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22, INVOKED BY:
+E:\安装软件\KEIL-51\C51\BIN\BL51.EXE 测距程序.obj TO 测距程序 RAMSIZE (256)
+
+
+MEMORY MODEL: SMALL WITH FLOATING POINT ARITHMETIC
+
+
+INPUT MODULES INCLUDED:
+  测距程序.obj (瞋距程序)
+  E:\安装软件\KEIL-51\C51\LIB\C51FPS.LIB (?C?FPMUL)
+  E:\安装软件\KEIL-51\C51\LIB\C51FPS.LIB (?C?FPDIV)
+  E:\安装软件\KEIL-51\C51\LIB\C51FPS.LIB (?C?FCAST)
+  E:\安装软件\KEIL-51\C51\LIB\C51FPS.LIB (PRINTF)
+  E:\安装软件\KEIL-51\C51\LIB\C51FPS.LIB (?C?FPGETOPN)
+  E:\安装软件\KEIL-51\C51\LIB\C51FPS.LIB (?C?FPROUND)
+  E:\安装软件\KEIL-51\C51\LIB\C51FPS.LIB (?C?FPCONVERT)
+  E:\安装软件\KEIL-51\C51\LIB\C51FPS.LIB (?C?FPADD)
+  E:\安装软件\KEIL-51\C51\LIB\C51FPS.LIB (?C?FTNPWR)
+  E:\安装软件\KEIL-51\C51\LIB\C51S.LIB (?C_STARTUP)
+  E:\安装软件\KEIL-51\C51\LIB\C51S.LIB (?C?CLDPTR)
+  E:\安装软件\KEIL-51\C51\LIB\C51S.LIB (?C?CLDOPTR)
+  E:\安装软件\KEIL-51\C51\LIB\C51S.LIB (?C?CSTPTR)
+  E:\安装软件\KEIL-51\C51\LIB\C51S.LIB (?C?LNEG)
+  E:\安装软件\KEIL-51\C51\LIB\C51S.LIB (?C?PLDIIDATA)
+  E:\安装软件\KEIL-51\C51\LIB\C51S.LIB (?C?CCASE)
+  E:\安装软件\KEIL-51\C51\LIB\C51S.LIB (PUTCHAR)
+  E:\安装软件\KEIL-51\C51\LIB\C51S.LIB (?C_INIT)
+
+
+LINK MAP OF MODULE:  测距程序 (瞋距程序)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0008H     UNIT         ?DT?瞋距程序
+                    0010H     0010H                  *** GAP ***
+            BIT     0020H.0   0001H.1   UNIT         _BIT_GROUP_
+            BIT     0021H.1   0000H.1   UNIT         ?BI?瞋距程序
+                    0021H.2   0000H.6                *** GAP ***
+            DATA    0022H     001CH     UNIT         _DATA_GROUP_
+            IDATA   003EH     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+            CODE    0003H     0006H     UNIT         ?CO?瞋距程序
+                    0009H     0002H                  *** GAP ***
+            CODE    000BH     0003H     ABSOLUTE     
+            CODE    000EH     0564H     UNIT         ?C?LIB_CODE
+            CODE    0572H     046FH     UNIT         ?PR?PRINTF?PRINTF
+            CODE    09E1H     008CH     UNIT         ?C_C51STARTUP
+            CODE    0A6DH     004AH     UNIT         ?PR?CONUT?瞋距程序
+            CODE    0AB7H     0034H     UNIT         ?PR?MAIN?瞋距程序
+            CODE    0AEBH     0027H     UNIT         ?PR?PUTCHAR?PUTCHAR
+            CODE    0B12H     001AH     UNIT         ?PR?_DELAYMS?瞋距程序
+            CODE    0B2CH     001AH     UNIT         ?PR?STARTMODULE?瞋距程序
+BL51 BANKED LINKER/LOCATER V6.22                                                      10/08/2011  10:31:25  PAGE 2
+
+
+            CODE    0B46H     0011H     UNIT         ?C_INITSEG
+            CODE    0B57H     0003H     UNIT         ?PR?ZD0?瞋距程序
+
+
+
+OVERLAY MAP OF MODULE:   测距程序 (瞋距程序)
+
+
+SEGMENT                             BIT_GROUP          DATA_GROUP 
+  +--> CALLED SEGMENT            START    LENGTH     START    LENGTH
+--------------------------------------------------------------------
+?C_C51STARTUP                    -----    -----      -----    -----
+  +--> ?PR?MAIN?瞋距程序
+  +--> ?C_INITSEG
+
+?PR?MAIN?瞋距程序                -----    -----      -----    -----
+  +--> ?PR?STARTMODULE?瞋距程序
+  +--> ?PR?CONUT?瞋距程序
+  +--> ?PR?_DELAYMS?瞋距程序
+
+?PR?CONUT?瞋距程序               -----    -----      -----    -----
+  +--> ?CO?瞋距程序
+  +--> ?PR?PRINTF?PRINTF
+
+?PR?PRINTF?PRINTF                0020H.0  0001H.1    0022H    001CH
+  +--> ?PR?PUTCHAR?PUTCHAR
+
+
+
+SYMBOL TABLE OF MODULE:  测距程序 (瞋距程序)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        瞋距程序
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  B:00A8H.7       PUBLIC        EA
+  C:0A6DH         PUBLIC        Conut
+  C:0B57H         PUBLIC        zd0
+  B:0090H.1       PUBLIC        P1_1
+  B:0090H.2       PUBLIC        P1_2
+  B:0021H.1       PUBLIC        flag
+  B:0098H.1       PUBLIC        TI
+  D:0008H         PUBLIC        timer
+  C:0AB7H         PUBLIC        main
+  D:000AH         PUBLIC        time
+  D:0098H         PUBLIC        SCON
+  D:0089H         PUBLIC        TMOD
+  B:00A8H.1       PUBLIC        ET0
+  D:008CH         PUBLIC        TH0
+  D:008DH         PUBLIC        TH1
+  D:008AH         PUBLIC        TL0
+  D:008BH         PUBLIC        TL1
+  D:000CH         PUBLIC        S
+  B:0088H.4       PUBLIC        TR0
+  B:0088H.6       PUBLIC        TR1
+  C:0B12H         PUBLIC        _delayms
+BL51 BANKED LINKER/LOCATER V6.22                                                      10/08/2011  10:31:25  PAGE 3
+
+
+  C:0B2CH         PUBLIC        StartModule
+  -------         PROC          CONUT
+  C:0A6DH         LINE#         26
+  C:0A6DH         LINE#         27
+  C:0A6DH         LINE#         28
+  C:0A7DH         LINE#         29
+  C:0A80H         LINE#         30
+  C:0A82H         LINE#         31
+  C:0AA6H         LINE#         38
+  -------         ENDPROC       CONUT
+  -------         PROC          _DELAYMS
+  D:0006H         SYMBOL        ms
+  -------         DO            
+  D:0004H         SYMBOL        i
+  D:0005H         SYMBOL        j
+  -------         ENDDO         
+  C:0B12H         LINE#         41
+  C:0B12H         LINE#         42
+  C:0B12H         LINE#         43
+  C:0B14H         LINE#         44
+  C:0B18H         LINE#         45
+  C:0B18H         LINE#         46
+  C:0B1CH         LINE#         47
+  C:0B1CH         LINE#         48
+  C:0B1EH         LINE#         49
+  C:0B24H         LINE#         51
+  C:0B2BH         LINE#         52
+  -------         ENDPROC       _DELAYMS
+  -------         PROC          ZD0
+  C:0B57H         LINE#         54
+  C:0B57H         LINE#         56
+  C:0B59H         LINE#         57
+  -------         ENDPROC       ZD0
+  -------         PROC          STARTMODULE
+  C:0B2CH         LINE#         59
+  C:0B2CH         LINE#         60
+  C:0B2CH         LINE#         61
+  C:0B2EH         LINE#         62
+  C:0B2FH         LINE#         63
+  C:0B30H         LINE#         64
+  C:0B31H         LINE#         65
+  C:0B32H         LINE#         66
+  C:0B33H         LINE#         67
+  C:0B34H         LINE#         68
+  C:0B35H         LINE#         69
+  C:0B36H         LINE#         70
+  C:0B37H         LINE#         71
+  C:0B38H         LINE#         72
+  C:0B39H         LINE#         73
+  C:0B3AH         LINE#         74
+  C:0B3BH         LINE#         75
+  C:0B3CH         LINE#         76
+  C:0B3DH         LINE#         77
+  C:0B3EH         LINE#         78
+  C:0B3FH         LINE#         79
+  C:0B40H         LINE#         80
+  C:0B41H         LINE#         81
+BL51 BANKED LINKER/LOCATER V6.22                                                      10/08/2011  10:31:25  PAGE 4
+
+
+  C:0B42H         LINE#         82
+  C:0B43H         LINE#         83
+  C:0B45H         LINE#         84
+  -------         ENDPROC       STARTMODULE
+  -------         PROC          MAIN
+  C:0AB7H         LINE#         86
+  C:0AB7H         LINE#         87
+  C:0AB7H         LINE#         88
+  C:0ABAH         LINE#         89
+  C:0ABDH         LINE#         90
+  C:0AC0H         LINE#         91
+  C:0AC3H         LINE#         92
+  C:0AC6H         LINE#         93
+  C:0AC8H         LINE#         94
+  C:0ACAH         LINE#         95
+  C:0ACCH         LINE#         96
+  C:0ACEH         LINE#         97
+  C:0AD0H         LINE#         99
+  C:0AD2H         LINE#         102
+  C:0AD2H         LINE#         103
+  C:0AD2H         LINE#         104
+  C:0AD5H         LINE#         105
+  C:0AD8H         LINE#         106
+  C:0ADAH         LINE#         107
+  C:0ADDH         LINE#         108
+  C:0ADFH         LINE#         109
+  C:0AE2H         LINE#         110
+  C:0AE9H         LINE#         112
+  -------         ENDPROC       MAIN
+  -------         ENDMOD        瞋距程序
+
+  -------         MODULE        ?C?FPMUL
+  C:000EH         PUBLIC        ?C?FPMUL
+  -------         ENDMOD        ?C?FPMUL
+
+  -------         MODULE        ?C?FPDIV
+  C:0117H         PUBLIC        ?C?FPDIV
+  -------         ENDMOD        ?C?FPDIV
+
+  -------         MODULE        ?C?FCAST
+  C:01BEH         PUBLIC        ?C?FCASTC
+  C:01B9H         PUBLIC        ?C?FCASTI
+  C:01B4H         PUBLIC        ?C?FCASTL
+  -------         ENDMOD        ?C?FCAST
+
+  -------         MODULE        PRINTF
+  D:0022H         PUBLIC        ?_PRINTF?BYTE
+  D:0022H         PUBLIC        ?_SPRINTF?BYTE
+  C:05D4H         PUBLIC        _PRINTF
+  C:05CEH         PUBLIC        _SPRINTF
+  -------         ENDMOD        PRINTF
+
+  -------         MODULE        ?C?FPROUND
+  C:023CH         PUBLIC        ?C?FPROUND
+  -------         ENDMOD        ?C?FPROUND
+
+  -------         MODULE        ?C?FPCONVERT
+BL51 BANKED LINKER/LOCATER V6.22                                                      10/08/2011  10:31:25  PAGE 5
+
+
+  C:026BH         PUBLIC        ?C?FPCONVERT
+  -------         ENDMOD        ?C?FPCONVERT
+
+  -------         MODULE        ?C?FPADD
+  C:0375H         PUBLIC        ?C?FPADD
+  C:0371H         PUBLIC        ?C?FPSUB
+  -------         ENDMOD        ?C?FPADD
+
+  -------         MODULE        ?C?FTNPWR
+  C:0496H         PUBLIC        ?C?FTNPWR
+  -------         ENDMOD        ?C?FTNPWR
+
+  -------         MODULE        ?C?CLDPTR
+  C:04D6H         PUBLIC        ?C?CLDPTR
+  -------         ENDMOD        ?C?CLDPTR
+
+  -------         MODULE        ?C?CLDOPTR
+  C:04EFH         PUBLIC        ?C?CLDOPTR
+  -------         ENDMOD        ?C?CLDOPTR
+
+  -------         MODULE        ?C?CSTPTR
+  C:051CH         PUBLIC        ?C?CSTPTR
+  -------         ENDMOD        ?C?CSTPTR
+
+  -------         MODULE        ?C?LNEG
+  C:052EH         PUBLIC        ?C?LNEG
+  -------         ENDMOD        ?C?LNEG
+
+  -------         MODULE        ?C?PLDIIDATA
+  C:053CH         PUBLIC        ?C?PLDIIDATA
+  -------         ENDMOD        ?C?PLDIIDATA
+
+  -------         MODULE        ?C?CCASE
+  C:054CH         PUBLIC        ?C?CCASE
+  -------         ENDMOD        ?C?CCASE
+
+  -------         MODULE        PUTCHAR
+  C:0AEBH         PUBLIC        _PUTCHAR
+  -------         ENDMOD        PUTCHAR
+
+Program Size: data=46.2 xdata=0 code=2904
+LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)
