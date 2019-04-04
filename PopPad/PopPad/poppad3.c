@@ -3,20 +3,6 @@
 #include "resource.h"
 #define  EDITID 1
 #define  UNTITLED TEXT("无标题")
-HDC getPrinterDC(void)
-{
-	DWORD dwNeed, dwReturned;
-	HDC hdc;
-	PRINTER_INFO_4 *pinfo4;
-	EnumPrinters(PRINTER_ENUM_LOCAL, NULL, 4, NULL, 0, &dwNeed, &dwReturned);
-	pinfo4 = malloc(dwNeed);
-	EnumPrinters(PRINTER_ENUM_LOCAL, NULL, 4, (PBYTE)pinfo4, dwNeed, &dwNeed, &dwReturned);
-	hdc = CreateDC(NULL, pinfo4[2].pPrinterName, NULL, NULL);
-	free(pinfo4);
-	return hdc;
-}
-LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
-BOOL CALLBACK AboutDlgProc(HWND, UINT, WPARAM, LPARAM);
 
 //function in popfile.c
 
@@ -48,7 +34,8 @@ BOOL PopPrntPrintFile(HINSTANCE, HWND, HWND, PTSTR);
 // golbal variables
 static HWND hDlgModeless;
 static TCHAR szAppName[] = TEXT("记事本");
-
+LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
+BOOL CALLBACK AboutDlgProc(HWND, UINT, WPARAM, LPARAM);
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd)
 {
 	MSG msg;
@@ -119,7 +106,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 	static HWND hwndEdit;
 	static TCHAR szFileName[MAX_PATH], szTitleName[MAX_PATH];
 	static BOOL bNeedSave = FALSE;
-	HDC hdc;
+
 	switch (message)
 	{
 	case WM_CREATE:
@@ -196,7 +183,6 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			DoCaption(hwnd, szTitleName);
 			return 0;
 		case IDM_FILE_PRINT:
-			hdc = getPrinterDC();
 			PopPrntPrintFile(hInst, hwnd, hwndEdit, szFileName);
 			return 0;
 		case IDM_APP_ABOUT:

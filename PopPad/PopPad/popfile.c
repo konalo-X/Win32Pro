@@ -203,7 +203,7 @@ BOOL PopFileWrite(HWND hwndEdit, PTSTR szFileName)
 
 }
 
-
+/*
 BOOL PopPrntPrintFile(HINSTANCE hinst, HWND hwnd, HWND hwndEdit, PTSTR pstrFileName)
 {
 	int iLength;
@@ -219,4 +219,4 @@ BOOL PopPrntPrintFile(HINSTANCE hinst, HWND hwnd, HWND hwndEdit, PTSTR pstrFileN
 	TextOut(hdcPrn, 0, 0, pBuffer, iLength);
 	RestoreDC(hdcPrn, -1);
 	return TRUE;
-}
+}*/
