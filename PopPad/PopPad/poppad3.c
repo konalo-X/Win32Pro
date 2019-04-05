@@ -113,7 +113,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		hInst = ((LPCREATESTRUCT)lParam)->hInstance;
 		hwndEdit = CreateWindow(TEXT("edit"), NULL, WS_CHILD  | WS_HSCROLL | WS_VSCROLL | WS_VISIBLE | ES_MULTILINE | ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_NOHIDESEL
 			, 0, 0, 0, 0, hwnd, (HMENU)EDITID, hInst, NULL);
+		SendMessage(hwndEdit, EM_SETLIMITTEXT, (WPARAM)32000, 0);
 		PopFileInitialize(hwnd);
+		PopFontInitialize(hwndEdit);
 		memset(szFileName, 0, MAX_PATH);
 		memset(szTitleName, 0, MAX_PATH);
 		DoCaption(hwnd, szTitleName);
@@ -183,8 +185,19 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			DoCaption(hwnd, szTitleName);
 			return 0;
 		case IDM_FILE_PRINT:
-			PopPrntPrintFile(hInst, hwnd, hwndEdit, szFileName);
+
+			PopPrntPrintFile(hInst, hwnd, hwndEdit, szTitleName);
 			return 0;
+		case IDM_APP_EXIT:
+			PostQuitMessage(0);
+			return 0;
+		case IDM_FORMAT_FONT:
+			
+			if (PopFontChooseFont(hwnd))
+				PopFontSetFont(hwndEdit);
+			
+			return 0;
+
 		case IDM_APP_ABOUT:
 			//hwndDlg = CreateWindow(NULL, NULL, WS_VISIBLE | WS_CHILD, 0, 0, 300, 200, hwnd, NULL, hInst, NULL);
 			//对话框有自己的函数，无须createwindows
@@ -192,6 +205,13 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			return 0;
 		}
 		break;
+	case WM_CTLCOLOREDIT:
+		
+			SetTextColor((HDC)wParam, (COLORREF)color);
+			//SetBkMode((HDC)wParam, TRANSPARENT);
+		
+
+		return 0;
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		return 0;
@@ -199,21 +219,3 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 	return DefWindowProc(hwnd, message, wParam, lParam);
 }
 
-BOOL CALLBACK AboutDlgProc(HWND hwndDlg, UINT message, WPARAM wParam, LPARAM lParam)
-{
-	switch (message)
-	{
-	case WM_INITDIALOG:
-		return TRUE;
-	case WM_COMMAND:
-		switch (LOWORD(wParam))
-		{
-		case IDOK:
-				EndDialog(hwndDlg, 0);
-			return TRUE;
-		
-		}
-		break;
-	}
-	return FALSE;
-}

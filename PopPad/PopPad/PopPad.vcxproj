@@ -147,6 +147,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="popfile.c" />
+    <ClCompile Include="popfont.c" />
     <ClCompile Include="poppad3.c" />
     <ClCompile Include="popprint.c" />
   </ItemGroup>
