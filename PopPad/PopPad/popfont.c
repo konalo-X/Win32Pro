@@ -24,7 +24,7 @@ BOOL PopFontChooseFont(HWND hwnd)
 	cf.hInstance = NULL;
 	cf.hwndOwner = hwnd;
 	cf.iPointSize = 0;
-	cf.lCustData = NULL;
+	cf.lCustData = (LPARAM)NULL;
 	cf.lpfnHook = NULL;
 	cf.lpLogFont = &lgfont;
 	cf.lpszStyle = NULL;
@@ -40,10 +40,9 @@ void PopFontSetFont(HWND hwndEdit)
 {
 	RECT rect;
 	HFONT hFontNew;
-	HDC hdc;
 	
 	hFontNew = CreateFontIndirect(&lgfont);
-	SendMessage(hwndEdit, EM_SETRECT, hFontNew, 0);
+	SendMessage(hwndEdit, EM_SETRECT, (WPARAM)hFontNew, 0);
 	DeleteObject(hFont);
 	hFont = hFontNew;
 	GetClientRect(hwndEdit, &rect);
@@ -52,4 +51,7 @@ void PopFontSetFont(HWND hwndEdit)
 
 
 }
-void PopFontDeinitialize(void);
+void PopFontDeinitialize(void)
+{
+	DeleteObject(hFont); //BOOL DeleteObject(HGDIOBJ hObject   // handle to graphic object);
+}

@@ -106,7 +106,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 	static HWND hwndEdit;
 	static TCHAR szFileName[MAX_PATH], szTitleName[MAX_PATH];
 	static BOOL bNeedSave = FALSE;
-
+	int iSelBegin, iSelEnd,iEnable;
+	
 	switch (message)
 	{
 	case WM_CREATE:
@@ -122,6 +123,29 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		return 0;
 	case WM_SIZE:
 		MoveWindow(hwndEdit, 0, 0, LOWORD(lParam), HIWORD(lParam), TRUE);
+		return 0;
+	case WM_INITMENUPOPUP:
+		switch (lParam)
+		{
+		case 1:
+			EnableMenuItem((HMENU)wParam, IDM_EDIT_UNDO, SendMessage(hwndEdit,EM_CANUNDO,0,0)?MF_ENABLED:MF_GRAYED);
+			 SendMessage(hwndEdit, EM_GETSEL, (WPARAM)&iSelBegin, (LPARAM)&iSelEnd);
+			 iEnable = iSelBegin == iSelEnd ? MF_GRAYED : MF_ENABLED;
+			 EnableMenuItem((HMENU)wParam, IDM_EDIT_CUT, iEnable);
+			 EnableMenuItem((HMENU)wParam, IDM_EDIT_COPY, iEnable);
+			 EnableMenuItem((HMENU)wParam, IDM_EDIT_PASTE, IsClipboardFormatAvailable(CF_TEXT)? MF_ENABLED: MF_GRAYED);
+			 EnableMenuItem((HMENU)wParam, IDM_EDIT_DELETE, iEnable );
+			break;
+		case 2:
+			iEnable = hDlgModeless == NULL ? MF_ENABLED : MF_GRAYED;
+			EnableMenuItem((HMENU)wParam, IDM_SEARCH_FIND, iEnable);
+			EnableMenuItem((HMENU)wParam, IDM_SEARCH_NEXT, iEnable);
+			EnableMenuItem((HMENU)wParam, IDM_SEARCH_REPLACE, iEnable);
+		}
+		
+		
+
+		
 		return 0;
 	case WM_COMMAND:
 		switch (LOWORD(wParam))
@@ -191,6 +215,31 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case IDM_APP_EXIT:
 			PostQuitMessage(0);
 			return 0;
+		case IDM_EDIT_UNDO:
+			SendMessage(hwndEdit, WM_UNDO, 0, 0);
+			return 0;
+		case IDM_EDIT_CUT:
+			SendMessage(hwndEdit, WM_CUT, 0, 0);
+			return 0;
+		case IDM_EDIT_COPY:
+			SendMessage(hwndEdit, WM_COPY, 0, 0);
+			return 0;
+		case IDM_EDIT_PASTE:
+			SendMessage(hwndEdit, WM_PASTE, 0, 0);
+			return 0;
+		case IDM_EDIT_DELETE:
+			SendMessage(hwndEdit, WM_CLEAR, 0, 0);
+			return 0;
+		case IDM_EDIT_SELECTALL:
+			SendMessage(hwndEdit, EM_SETSEL, 0, -1);
+			return 0;
+			//message form search menu
+		case IDM_SEARCH_FIND:
+			hDlgModeless=PopFindFindDlg(hwnd);
+			return 0;
+		case IDM_SEARCH_REPLACE:
+			hDlgModeless=PopFindReplaceDlg(hwnd);
+			return 0;
 		case IDM_FORMAT_FONT:
 			
 			if (PopFontChooseFont(hwnd))
@@ -205,14 +254,16 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			return 0;
 		}
 		break;
+
+
 	case WM_CTLCOLOREDIT:
-		
 			SetTextColor((HDC)wParam, (COLORREF)color);
 			//SetBkMode((HDC)wParam, TRANSPARENT);
 		
 
 		return 0;
 	case WM_DESTROY:
+		PopFontDeinitialize();
 		PostQuitMessage(0);
 		return 0;
 	}
