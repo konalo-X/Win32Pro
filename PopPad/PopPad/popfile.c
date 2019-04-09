@@ -47,7 +47,7 @@ BOOL PopFileOpenDlg(HWND hwnd, PTSTR szFileName, PTSTR szTitleName)
 BOOL PopFileSaveDlg(HWND hwnd, PTSTR szFileName, PTSTR szTitleName)
 {
 	ofn.hwndOwner = hwnd;
-	ofn.Flags = OFN_CREATEPROMPT | OFN_HIDEREADONLY;
+	ofn.Flags = OFN_OVERWRITEPROMPT;
 	ofn.lpstrFile = szFileName;
 	ofn.lpstrFileTitle = szTitleName;
 

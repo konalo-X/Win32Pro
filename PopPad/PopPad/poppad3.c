@@ -100,6 +100,11 @@ short AskToSave(HWND hwnd, TCHAR *szTitleName)
 	return iReturn;
 }
 
+void okMessage(HWND hwnd, PTSTR szContent, PTSTR szFileName)
+{
+	MessageBox(hwnd, szContent, szFileName[0] ? szFileName : szAppName,MB_OK|MB_ICONEXCLAMATION);
+}
+
 LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	static HINSTANCE hInst;
@@ -107,7 +112,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 	static TCHAR szFileName[MAX_PATH], szTitleName[MAX_PATH];
 	static BOOL bNeedSave = FALSE;
 	int iSelBegin, iSelEnd,iEnable;
-	
+	static int iOffset=0;
+	static int PriPos;
+	static UINT messageFindReplace;
+	LPFINDREPLACE pfr;
 	switch (message)
 	{
 	case WM_CREATE:
@@ -119,6 +127,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		PopFontInitialize(hwndEdit);
 		memset(szFileName, 0, MAX_PATH);
 		memset(szTitleName, 0, MAX_PATH);
+		messageFindReplace = RegisterWindowMessage(FINDMSGSTRING);
+		PopFileInitialize(hwnd);
+		PopFontInitialize(hwndEdit);
 		DoCaption(hwnd, szTitleName);
 		return 0;
 	case WM_SIZE:
@@ -143,17 +154,32 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			EnableMenuItem((HMENU)wParam, IDM_SEARCH_REPLACE, iEnable);
 		}
 		
-		
-
-		
 		return 0;
 	case WM_COMMAND:
+		if (lParam&&LOWORD(wParam) == EDITID)
+		{
+			switch (HIWORD(wParam))
+			{
+			case EN_UPDATE:
+				bNeedSave = TRUE;
+				return 0;
+			case EN_ERRSPACE:
+			case EN_MAXTEXT:
+				MessageBox(hwnd, TEXT("Edit control out of space."), szAppName, MB_OK | MB_ICONSTOP);
+				return 0;
+			}
+			break;
+		}
 		switch (LOWORD(wParam))
 		{
 		case IDM_FILE_NEW:
+			if (bNeedSave && IDCANCEL == AskToSave(hwnd, szTitleName))
+				return 0;
 			szTitleName[0] = '\0';
+			szFileName[0] = '\0';
 			SetWindowText(hwndEdit, TEXT(""));
 			DoCaption(hwnd, szTitleName);
+			bNeedSave = FALSE;
 			return 0;
 		case IDM_FILE_OPEN:
 			if (bNeedSave && IDCANCEL == AskToSave(hwnd, szTitleName))
@@ -172,41 +198,39 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			
 			return 0;
 		case IDM_FILE_SAVE:
-			if (bNeedSave)
-				return 0;
-			if (szFileName[0] == '\0')
+			
+			if (szFileName[0])
 			{
-				//wsprintf(szTitleName, TEXT("*.txt"));
-				wsprintf(szFileName, TEXT("*.txt"));
-				if (PopFileSaveDlg(hwnd, szFileName, szTitleName))
-				{
-					if (!PopFileWrite(hwndEdit,szFileName))
+
+					if (PopFileWrite(hwndEdit,szFileName))
 					{
-						MessageBox(hwnd, TEXT("reruires more space!"), szAppName, MB_ICONERROR);
+						bNeedSave = FALSE;
+						return 1;
+					}
+					else
+					{
+						MessageBox(hwnd, TEXT("Could not write to file "), szAppName, MB_ICONERROR);
 						return 0;
 					}
-				}
 			}
-			else
-				if (!PopFileWrite(hwndEdit, szFileName))
-				{
-					MessageBox(hwnd, TEXT("reruires more space!"), szAppName, MB_ICONERROR);
-					return 0;
-				}
-
-			DoCaption(hwnd, szTitleName);
-			bNeedSave = FALSE;
-			return 0;
+			
+			//fall through
 		case IDM_FILE_SAVEAS:
 			if (PopFileSaveDlg(hwnd, szFileName, szTitleName))
 			{
-				if (!PopFileWrite(hwndEdit, szFileName))
+				DoCaption(hwnd, szTitleName);
+				if (PopFileWrite(hwndEdit, szFileName))
 				{
-					MessageBox(hwnd, TEXT("reruires more space!"), szAppName, MB_ICONERROR);
+					bNeedSave = FALSE;
+					return 1;
+				}
+				else
+				{
+					MessageBox(hwnd, TEXT("Could not write file"), szTitleName,MB_OK|MB_ICONERROR);
 					return 0;
 				}
 			}
-			DoCaption(hwnd, szTitleName);
+			
 			return 0;
 		case IDM_FILE_PRINT:
 
@@ -235,10 +259,29 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			return 0;
 			//message form search menu
 		case IDM_SEARCH_FIND:
+			
+			SendMessage(hwndEdit, EM_GETSEL, 0, (LPARAM)&iOffset);
+		if (iOffset != 0)
+				iOffset = 0;
 			hDlgModeless=PopFindFindDlg(hwnd);
+			//PopFindFindText(hwndEdit,)
+			return 0;
+		case IDM_SEARCH_NEXT:
+			SendMessage(hwndEdit, EM_GETSEL, 0, (LPARAM)&iOffset);
+
+			if (PopFindValidFind())
+				PopFindNextText(hwndEdit, &iOffset);
+			else
+				hDlgModeless = PopFindFindDlg(hwnd);
+
 			return 0;
 		case IDM_SEARCH_REPLACE:
+			
 			hDlgModeless=PopFindReplaceDlg(hwnd);
+			SendMessage(hwndEdit, EM_GETSEL, 0, (LPARAM)&iOffset);
+			if (iOffset != 0)
+				iOffset = 0;
+
 			return 0;
 		case IDM_FORMAT_FONT:
 			
@@ -262,10 +305,38 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		
 
 		return 0;
+	case WM_SETFOCUS:
+		SetFocus(hwndEdit);
+		return 0;
 	case WM_DESTROY:
 		PopFontDeinitialize();
 		PostQuitMessage(0);
 		return 0;
+	default:
+		//process findtext message
+		if (message == messageFindReplace)
+		{
+			
+			pfr = (LPFINDREPLACE)lParam;
+			if (pfr->Flags&FR_DIALOGTERM)
+				hDlgModeless = NULL;
+			if (pfr->Flags&FR_FINDNEXT)
+			{
+					
+					if (!PopFindFindText(hwndEdit, &iOffset, pfr))
+						okMessage(hwnd, TEXT("Text not found"), TEXT("\0"));
+
+			}
+			if (pfr->Flags&FR_REPLACE|| pfr->Flags&FR_REPLACEALL)
+				if (!PopFindReplaceTex(hwndEdit, &iOffset, pfr))
+					okMessage(hwnd, TEXT("Text not found"), TEXT("\0"));
+			if (pfr->Flags&FR_REPLACEALL)
+			{
+				while (PopFindReplaceTex(hwndEdit, &iOffset, pfr));
+			}
+			return 0;
+		}
+		break;
 	}
 	return DefWindowProc(hwnd, message, wParam, lParam);
 }
