@@ -45,22 +45,29 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 	switch (message)
 	{
 	case WM_CREATE:
-		cxSource = GetSystemMetrics(SM_CXSIZEFRAME)+ GetSystemMetrics(SM_CXSIZE);
+		cxSource = GetSystemMetrics(SM_CXSIZEFRAME)+GetSystemMetrics(SM_CXSIZE);
 		cySource = GetSystemMetrics(SM_CYSIZEFRAME)+GetSystemMetrics(SM_CYCAPTION);
 		return 0;
 	case WM_SIZE:
 		cxClient =LOWORD(lParam);
 		cyClient = HIWORD(lParam);
+		//InvalidateRect(hwnd, NULL, TRUE);
 		return 0;
 	case WM_PAINT:
 		hdcClient = BeginPaint(hwnd, &ps);
 		hdcWindow = GetWindowDC(hwnd);
-	//	for (y=0;y<cyClient;y+=cySource)
-		//	for (	 x = 0; x < cxClient; x+=cxSource)
+		for (y=0;y<cyClient;y+=cySource)
+			for (	 x = 0; x < cxClient; x+=cxSource)
 			{
-				BitBlt(hdcClient, 0, 0, cxSource, cySource, hdcWindow, 0, 0, SRCCOPY);
+				//BitBlt(hdcDst,xDst,yDst,cx,cy,hdcSrc,xSrc,ySrc,dwROP)
+				//xDst,yDst,要复制区域的左上角
+				//cx,cy 图标的长宽
+				//xSrc,ySrc 要复制图标的起点
+				BitBlt(hdcClient, x, y, cxSource, cySource, hdcWindow, 0, 0, SRCINVERT);
 			}
-	
+		LineTo(hdcWindow, cxSource, 0);
+		LineTo(hdcWindow, cxSource, cySource);
+		LineTo(hdcWindow, 0, cySource);
 		ReleaseDC(hwnd, hdcWindow);
 		EndPaint(hwnd, &ps);
 		return 0;
